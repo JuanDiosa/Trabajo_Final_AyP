@@ -40,7 +40,7 @@ El código proporcionado en este repositorio realiza las siguientes acciones:
      ```
 
 2. **Ejecución del Código:**
-   - Ejecuta el script `matriculacion.py` para iniciar el proceso de matriculación.
+   - Ejecuta el script `Regipro.py` para iniciar el proceso de matriculación.
    - Ajusta los parámetros según sea necesario en el script principal.
 
 3. **Verificación de Resultados:**
