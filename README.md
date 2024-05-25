@@ -1,5 +1,8 @@
 # Trabajo_Final_AyP
 
+![REGIPRO](https://github.com/JuanDiosa/Trabajo_Final_AyP/blob/c20201435f4ed296c3eefe9141a305ba67b3891d/AyP/_a6202790-ec4f-4c3b-a003-40656dd2559e.jpg)
+
+
 # Programa académico:
 Ingeniería Industrial Presencial
 
@@ -52,4 +55,3 @@ Recomendamos hacer la ejecución en Visual Studio Code, ya que fue donde hicimos
 ## Licencia
 
 Este proyecto está bajo la [Licencia MIT](LICENSE).
-
