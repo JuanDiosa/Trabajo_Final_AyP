@@ -1,5 +1,8 @@
 # Trabajo_Final_AyP
 
+# Programa académico:
+Ingeniería Industrial Presencial
+
 # Integrantes: 
 
 - Juan Esteban Diosa 
