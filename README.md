@@ -29,7 +29,7 @@ El código proporcionado en este repositorio realiza las siguientes acciones:
 ## Instrucciones de Uso
 
 1. **Preparación del Entorno:**
-   - Asegúrate de tener Python instalado en tu sistema.
+   - Asegúrese de tener Python instalado en su sistema.
    - Instala las dependencias necesarias utilizando pip:
      ```
      pip install pandas
@@ -42,6 +42,9 @@ El código proporcionado en este repositorio realiza las siguientes acciones:
 
 3. **Verificación de Resultados:**
    - Verifica la generación de archivos de asignación en el directorio especificado.
+
+## Importante:
+Recomendamos hacer la ejecución en Visual Studio Code, ya que fue donde hicimos las pruebas del código y garantizamos su compatibilidad y funcionamiento óptimo en este entorno de desarrollo.
 
 ## Licencia
 
