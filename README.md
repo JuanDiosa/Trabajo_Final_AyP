@@ -1,4 +1,11 @@
 # Trabajo_Final_AyP
+
+# Integrantes: 
+
+- Juan Esteban Diosa 
+- Maria Isabel Buitrago
+- Juliana Hurtado
+
 # Matriculación de Estudiantes
 
 Este proyecto automatiza el proceso de matriculación de estudiantes utilizando datos de estudiantes y una malla curricular.
@@ -25,7 +32,8 @@ El código proporcionado en este repositorio realiza las siguientes acciones:
    - Asegúrate de tener Python instalado en tu sistema.
    - Instala las dependencias necesarias utilizando pip:
      ```
-     pip install pandas openpyxl
+     pip install pandas
+     pip install openpyxl
      ```
 
 2. **Ejecución del Código:**
@@ -38,5 +46,4 @@ El código proporcionado en este repositorio realiza las siguientes acciones:
 ## Licencia
 
 Este proyecto está bajo la [Licencia MIT](LICENSE).
-
 
