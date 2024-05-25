@@ -36,7 +36,7 @@ El código proporcionado en este repositorio realiza las siguientes acciones:
 
 1. **Preparación del Entorno:**
    - Asegúrese de tener Python instalado en su sistema.
-   - Instala las dependencias necesarias utilizando pip:
+   - Instale las dependencias necesarias utilizando pip:
      ```
      pip install pandas
      pip install openpyxl
