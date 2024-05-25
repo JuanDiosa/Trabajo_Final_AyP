@@ -5,7 +5,6 @@ import time
 import platform
 import logging
 
-# Configuración del logging
 ruta_final_dir = 'Ruta_final'
 os.makedirs(ruta_final_dir, exist_ok=True)
 log_path = os.path.join(ruta_final_dir, 'matriculacion.log')
@@ -15,14 +14,12 @@ logging.basicConfig(level=logging.INFO, format='%(asctime)s.%(msecs)03d\t%(messa
     logging.StreamHandler()
 ])
 
-# Obtener detalles del sistema
 user = os.getlogin()
 system_info = platform.uname()
 header_info = f"Usuario: {user}, Sistema operativo: {system_info.system}, Plataforma: {system_info.release}, Version: {system_info.version}, Máquina: {system_info.machine}, Procesador: {system_info.processor}"
 
 logging.info(header_info)
 
-# Función para registrar el tiempo de ejecución de una operación
 def log_timed_operation(operation_name, func, *args, **kwargs):
     start_time = time.time()
     result = func(*args, **kwargs)
