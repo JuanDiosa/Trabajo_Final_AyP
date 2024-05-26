@@ -50,7 +50,7 @@ El código proporcionado en este repositorio realiza las siguientes acciones:
    - Verifica la generación de archivos de asignación en el directorio especificado.
 
 ## Importante:
-Recomendamos hacer la ejecución en Visual Studio Code, ya que fue donde hicimos las pruebas del código y garantizamos su compatibilidad y funcionamiento óptimo en este entorno de desarrollo.
+Recomendamos hacer la ejecución en Visual Studio Code, ya que fue donde hicimos las pruebas del código, garantizamos su compatibilidad y funcionamiento óptimo en este entorno de desarrollo.
 
 ## Licencia
 
