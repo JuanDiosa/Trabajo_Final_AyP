@@ -5,134 +5,134 @@ import time
 import platform
 import logging
 
-ruta_final_dir = 'Ruta_final'
-os.makedirs(ruta_final_dir, exist_ok=True)
-log_path = os.path.join(ruta_final_dir, 'matriculacion.log')
+CarpetaPrincipal = 'Matriculas'
+os.makedirs(CarpetaPrincipal, exist_ok=True)
+RutaLog = os.path.join(CarpetaPrincipal, 'matriculacion.txt')
 
 logging.basicConfig(level=logging.INFO, format='%(asctime)s.%(msecs)03d\t%(message)s', datefmt='%Y-%m-%d %H:%M:%S', handlers=[
-    logging.FileHandler(log_path, encoding='utf-8'),
+    logging.FileHandler(RutaLog, encoding='utf-8'),
     logging.StreamHandler()
 ])
 
 user = os.getlogin()
-system_info = platform.uname()
-header_info = f"Usuario: {user}, Sistema operativo: {system_info.system}, Plataforma: {system_info.release}, Version: {system_info.version}, Máquina: {system_info.machine}, Procesador: {system_info.processor}"
+InfoSistema = platform.uname()
+InfoEncabezado = f"Usuario: {user}, Sistema operativo: {InfoSistema.system}, Plataforma: {InfoSistema.release}, Version: {InfoSistema.version}, Máquina: {InfoSistema.machine}, Procesador: {InfoSistema.processor}"
 
-logging.info(header_info)
+logging.info(InfoEncabezado)
 
-def log_timed_operation(operation_name, func, *args, **kwargs):
-    start_time = time.time()
+def TiempoDeEjecucion(NombreDeLaOperacion, func, *args, **kwargs):
+    TiempoInicial = time.time()
     result = func(*args, **kwargs)
-    end_time = time.time()
-    elapsed_time = end_time - start_time
-    logging.info(f"{operation_name}\tTiempo: {elapsed_time:.6f} segundos")
+    TiempoFinal = time.time()
+    TiempoTranscurrido = TiempoFinal - TiempoInicial
+    logging.info(f"{NombreDeLaOperacion}\tTiempo: {TiempoTranscurrido:.6f} segundos")
     return result
 
 logging.info('Cargando datos iniciales y malla curricular...')
-DatosIniciales = log_timed_operation('Cargar Datos Iniciales', pd.read_csv, 'https://github.com/JuanDiosa/Trabajo_Final_AyP/raw/213a425e4ee26788abac77401237b4dd377a2ca1/AyP/Estudiantes.csv', encoding='latin1', delimiter=';')
-MallaCurricular = log_timed_operation('Cargar Malla Curricular', pd.read_csv, 'https://github.com/JuanDiosa/Trabajo_Final_AyP/raw/213a425e4ee26788abac77401237b4dd377a2ca1/AyP/MallaCurricular.csv', encoding='latin1', delimiter=';')
+DatosIniciales = TiempoDeEjecucion('Cargar Datos Iniciales', pd.read_csv, 'https://github.com/JuanDiosa/Trabajo_Final_AyP/raw/213a425e4ee26788abac77401237b4dd377a2ca1/AyP/Estudiantes.csv', encoding='latin1', delimiter=';')
+MallaCurricular = TiempoDeEjecucion('Cargar Malla Curricular', pd.read_csv, 'https://github.com/JuanDiosa/Trabajo_Final_AyP/raw/213a425e4ee26788abac77401237b4dd377a2ca1/AyP/MallaCurricular.csv', encoding='latin1', delimiter=';')
 Datos = DatosIniciales.drop(columns=['Fecha'])
 logging.info('Datos cargados con éxito.')
 
-def generar_codigo_asignatura(asignatura, semestre, creditos, consecutivo):
-    codigo = f"{asignatura[:3].upper()}{semestre}{creditos}{consecutivo:01d}"
+def GenerarCodigoDeAsignatura(asignatura, Semestre, Creditos, consecutivo):
+    codigo = f"{asignatura[:3].upper()}{Semestre}{Creditos}{consecutivo:01d}"
     logging.debug(f'Generado código de asignatura: {codigo}')
     return codigo
 
-def calcular_htd(creditos):
-    htd = {4: 96, 3: 64, 2: 32, 1: 16}.get(creditos, 0)
-    logging.debug(f'Calculadas horas de trabajo docente (HTD) para {creditos} créditos: {htd}')
+def CalcularHTD(Creditos):
+    htd = {4: 96, 3: 64, 2: 32, 1: 16}.get(Creditos, 0)
+    logging.debug(f'Calculadas horas de trabajo docente (HTD) para {Creditos} créditos: {htd}')
     return htd
 
-def calcular_hti(creditos):
-    hti = {4: 120, 3: 80, 2: 64, 1: 32}.get(creditos, 0)
-    logging.debug(f'Calculadas horas de trabajo independiente (HTI) para {creditos} créditos: {hti}')
+def CalcularHTI(Creditos):
+    hti = {4: 120, 3: 80, 2: 64, 1: 32}.get(Creditos, 0)
+    logging.debug(f'Calculadas horas de trabajo independiente (HTI) para {Creditos} créditos: {hti}')
     return hti
 
-def crear_directorio_si_no_existe(ruta):
+def CrearDirectorioSiNoExiste(ruta):
     if not os.path.exists(ruta):
         os.makedirs(ruta)
         logging.info(f'Directorio creado: {ruta}')
     else:
         logging.info(f'Directorio ya existe: {ruta}')
 
-def guardar_asignaciones(grupo_df, grupo_path, grupo_excel_path):
-    grupo_df.to_csv(grupo_path, index=False, encoding='latin1')
-    grupo_df.to_excel(grupo_excel_path, index=False)
-    logging.info(f'Archivos guardados: {grupo_path}, {grupo_excel_path}')
+def GuardarArchivos(DataframeDeGrupo, RutaCSV, RutaEXCEL):
+    DataframeDeGrupo.to_csv(RutaCSV, index=False, encoding='latin1')
+    DataframeDeGrupo.to_excel(RutaEXCEL, index=False)
+    logging.info(f'Archivos guardados: {RutaCSV}, {RutaEXCEL}')
 
-def generar_consecutivo_por_asignatura(asignaturas_df, nivel):
-    asignaturas_nivel = asignaturas_df[asignaturas_df['Nivel'] == nivel]
+def GenerarConsecutivoParaLasAsignaturas(asignaturas_df, nivel):
+    AsignaturasPorNivel = asignaturas_df[asignaturas_df['Nivel'] == nivel]
     consecutivos = {}
-    for idx, asignatura in enumerate(asignaturas_nivel.itertuples(), start=0):
-        asignatura_nombre = asignatura.Asignatura
-        consecutivos[asignatura_nombre] = idx % 10
-        logging.debug(f'Asignatura: {asignatura_nombre}, Consec. inicial: {consecutivos[asignatura_nombre]}')
+    for idx, asignatura in enumerate(AsignaturasPorNivel.itertuples(), start=0):
+        NombreDeLaAsignatura = asignatura.Asignatura
+        consecutivos[NombreDeLaAsignatura] = idx % 10
+        logging.debug(f'Asignatura: {NombreDeLaAsignatura}, Consec. inicial: {consecutivos[NombreDeLaAsignatura]}')
     return consecutivos
 
-def matricular_estudiantes(estudiantes_df, asignaturas_df, semestre, nivel, tamano_grupo):
-    logging.info(f'Iniciando matriculación de estudiantes para el semestre {semestre}, nivel {nivel}...')
-    estudiantes_semestre = estudiantes_df[estudiantes_df['Semestre'] == semestre]
-    total_estudiantes_semestre = len(estudiantes_semestre)
-    asignaturas_nivel = asignaturas_df[asignaturas_df['Nivel'] == nivel]
-    grupos = [estudiantes_semestre[i:i + tamano_grupo] for i in range(0, len(estudiantes_semestre), tamano_grupo)]
+def MatricularEstudiantes(estudiantes_df, asignaturas_df, Semestre, nivel, MaximoDeEstudiantesPorGrupo):
+    logging.info(f'Iniciando matriculación de estudiantes para el semestre {Semestre}, nivel {nivel}...')
+    EstudiantesPorSemestre = estudiantes_df[estudiantes_df['Semestre'] == Semestre]
+    TotalDeEstudiantesPorSemestre = len(EstudiantesPorSemestre)
+    AsignaturasPorNivel = asignaturas_df[asignaturas_df['Nivel'] == nivel]
+    Grupos = [EstudiantesPorSemestre[i:i + MaximoDeEstudiantesPorGrupo] for i in range(0, len(EstudiantesPorSemestre), MaximoDeEstudiantesPorGrupo)]
 
-    logging.info(f'Total estudiantes en semestre {semestre}: {total_estudiantes_semestre}')
-    logging.info(f'Asignaturas en nivel {nivel}: {len(asignaturas_nivel)}')
-    logging.info(f'Número de grupos generados: {len(grupos)}')
+    logging.info(f'Total estudiantes en semestre {Semestre}: {TotalDeEstudiantesPorSemestre}')
+    logging.info(f'Asignaturas en nivel {nivel}: {len(AsignaturasPorNivel)}')
+    logging.info(f'Número de grupos generados: {len(Grupos)}')
 
-    base_dir = os.path.join(ruta_final_dir, f'Asignaciones_Semestre_{semestre}')
-    crear_directorio_si_no_existe(base_dir)
+    base_dir = os.path.join(CarpetaPrincipal, f'Semestre_{Semestre}')
+    CrearDirectorioSiNoExiste(base_dir)
 
-    consecutivo_asignatura = generar_consecutivo_por_asignatura(asignaturas_df, nivel)
+    consecutivo_asignatura = GenerarConsecutivoParaLasAsignaturas(asignaturas_df, nivel)
 
-    for index, asignatura in asignaturas_nivel.iterrows():
-        asignatura_nombre = asignatura['Asignatura']
-        creditos = asignatura['Creditos']
-        total_cursos_asignados = len(grupos)
-        fecha_creacion = datetime.now().strftime('%Y%m%d')
-        asignatura_dir = os.path.join(base_dir, asignatura_nombre)
-        crear_directorio_si_no_existe(asignatura_dir)
+    for index, asignatura in AsignaturasPorNivel.iterrows():
+        NombreDeLaAsignatura = asignatura['Asignatura']
+        Creditos = asignatura['Creditos']
+        TotalDeCursosAsignados = len(Grupos)
+        FechaDeCreacion = datetime.now().strftime('%Y%m%d')
+        DirectorioAsignatura = os.path.join(base_dir, NombreDeLaAsignatura)
+        CrearDirectorioSiNoExiste(DirectorioAsignatura)
 
-        logging.info(f'Procesando asignatura: {asignatura_nombre} - Créditos: {creditos}')
+        logging.info(f'Procesando asignatura: {NombreDeLaAsignatura} - Créditos: {Creditos}')
 
-        for numero_grupo, grupo in enumerate(grupos, start=1):
-            logging.info(f'Asignando grupo {numero_grupo} para la asignatura {asignatura_nombre}...')
-            codigo_asignatura = generar_codigo_asignatura(asignatura_nombre, semestre, creditos, consecutivo_asignatura[asignatura_nombre])
-            horas_trabajo_docente = calcular_htd(creditos)
-            horas_trabajo_independiente = calcular_hti(creditos)
-            cantidad_estudiantes = len(grupo)
-            logging.info(f'Grupo {numero_grupo} asignado con {cantidad_estudiantes} estudiantes. Código asignatura: {codigo_asignatura}')
+        for NumeroDeGrupo, grupo in enumerate(Grupos, start=1):
+            logging.info(f'Asignando grupo {NumeroDeGrupo} para la asignatura {NombreDeLaAsignatura}...')
+            CodigoDeAsignatura = GenerarCodigoDeAsignatura(NombreDeLaAsignatura, Semestre, Creditos, consecutivo_asignatura[NombreDeLaAsignatura])
+            HorasDeTrabajoDocente = CalcularHTD(Creditos)
+            HorasDeTrabajoIndependiente = CalcularHTI(Creditos)
+            CantidadDeEstudiantes = len(grupo)
+            logging.info(f'Grupo {NumeroDeGrupo} asignado con {CantidadDeEstudiantes} estudiantes. Código asignatura: {CodigoDeAsignatura}')
 
-            nombre_curso_formateado = asignatura_nombre.replace(" ", "").capitalize()
-            grupo_filename = f"{codigo_asignatura}-{nombre_curso_formateado}-{cantidad_estudiantes}-{numero_grupo}.csv"
-            grupo_excel_filename = f"{codigo_asignatura}-{nombre_curso_formateado}-{cantidad_estudiantes}-{numero_grupo}.xlsx"
-            grupo_path = os.path.join(asignatura_dir, grupo_filename)
-            grupo_excel_path = os.path.join(asignatura_dir, grupo_excel_filename)
+            NombreDeAsignaturaFormateado = NombreDeLaAsignatura.replace(" ", "").capitalize()
+            NombreArchivoCSV = f"{CodigoDeAsignatura}-{NombreDeAsignaturaFormateado}-{CantidadDeEstudiantes}-{NumeroDeGrupo}.csv"
+            NombreArchivoEXCEL = f"{CodigoDeAsignatura}-{NombreDeAsignaturaFormateado}-{CantidadDeEstudiantes}-{NumeroDeGrupo}.xlsx"
+            RutaCSV = os.path.join(DirectorioAsignatura, NombreArchivoCSV)
+            RutaEXCEL = os.path.join(DirectorioAsignatura, NombreArchivoEXCEL)
 
-            grupo_df = pd.DataFrame({
+            DataframeDeGrupo = pd.DataFrame({
                 'Estudiante': grupo['Nombre'],
-                'Codigo Asignatura (CA)': codigo_asignatura,
-                'Horas de trabajo docente (HTD)': horas_trabajo_docente,
-                'Horas de trabajo independiente (HTI)': horas_trabajo_independiente,
-                'Numero total de estudiantes (NTE)': total_estudiantes_semestre,
-                'Codigo del curso (CC)': numero_grupo,
-                'Total de cursos asignados (TCA)': total_cursos_asignados,
-                'Fecha de creacion (FC)': fecha_creacion
+                'Codigo Asignatura (CA)': CodigoDeAsignatura,
+                'Horas de trabajo docente (HTD)': HorasDeTrabajoDocente,
+                'Horas de trabajo independiente (HTI)': HorasDeTrabajoIndependiente,
+                'Numero total de estudiantes (NTE)': TotalDeEstudiantesPorSemestre,
+                'Codigo del curso (CC)': NumeroDeGrupo,
+                'Total de cursos asignados (TCA)': TotalDeCursosAsignados,
+                'Fecha de creacion (FC)': FechaDeCreacion
             })
 
-            log_timed_operation('Guardar Asignaciones', guardar_asignaciones, grupo_df, grupo_path, grupo_excel_path)
+            TiempoDeEjecucion('Guardar Asignaciones', GuardarArchivos, DataframeDeGrupo, RutaCSV, RutaEXCEL)
 
-    logging.info(f"Archivos CSV y Excel de asignaciones generados para el semestre {semestre}.")
+    logging.info(f"Archivos CSV y Excel de asignaciones generados para el semestre {Semestre}.")
 
-niveles_semestre = {
+DatosParaMatricular = {
     1: (1, 30), 2: (2, 30), 3: (3, 30), 4: (4, 25),
     5: (5, 25), 6: (6, 25), 7: (7, 20), 8: (8, 20),
     9: (9, 20), 10: (10, 10)
 }
 
 
-for semestre, (nivel, tamano_grupo) in niveles_semestre.items():
-    log_timed_operation('Matricular Estudiantes', matricular_estudiantes, Datos, MallaCurricular, semestre, nivel, tamano_grupo)
+for Semestre, (nivel, MaximoDeEstudiantesPorGrupo) in DatosParaMatricular.items():
+    TiempoDeEjecucion('Matricular Estudiantes', MatricularEstudiantes, Datos, MallaCurricular, Semestre, nivel, MaximoDeEstudiantesPorGrupo)
 
 logging.info("Tipo de acciones realizadas: cargar datos, generar códigos, calcular HTD/HTI, crear directorios, guardar asignaciones")
